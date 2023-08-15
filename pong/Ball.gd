@@ -2,9 +2,16 @@ extends ColorRect
 
 var velocity = Vector2(Globals.SPEED, Globals.SPEED)
 
+func _ready():
+	Event.on_reset(reset)
+	
+func reset():
+	var windowWidth = get_viewport_rect().size.x
+	var windowHeight = get_viewport_rect().size.y
+	position.x = windowWidth / 2 - size.x / 2
+	position.y = windowHeight / 2 - size.y / 2
+
 func _process(delta):
-	var leftLabel = get_node("../LeftLabel")
-	var rightLabel = get_node("../RightLabel")
 	var windowWidth = get_viewport_rect().size.x
 	var windowHeight = get_viewport_rect().size.y
 	
@@ -18,13 +25,11 @@ func _process(delta):
 		velocity.y = -velocity.y
 		
 	if position.x + size.x >= windowWidth:
-		position.x = windowWidth / 2 - size.x / 2
-		position.y = windowHeight / 2 - size.y / 2
+		reset()
 		velocity.x = -velocity.x
-		leftLabel.left_scored()
+		Event.left_scored()
 		
 	if position.x <= 0:
-		position.x = windowWidth / 2 - size.x / 2
-		position.y = windowHeight / 2 - size.y / 2
+		reset()
 		velocity.x = -velocity.x
-		rightLabel.right_scored()
+		Event.right_scored()
